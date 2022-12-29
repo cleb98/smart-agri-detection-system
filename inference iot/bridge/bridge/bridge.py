@@ -65,11 +65,9 @@ class Bridge():
 		# split parts
 		if self.inbuffer[0] != b'\xff':
 			return False
-
 		numval = int.from_bytes(self.inbuffer[1], byteorder='little')
-
 		for i in range(numval):
-			print(i)
+				print(i)
 
 if __name__ == '__main__':
 	br = Bridge()

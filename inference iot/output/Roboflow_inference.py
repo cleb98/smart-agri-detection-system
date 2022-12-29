@@ -29,5 +29,7 @@ model.predict("image.jpg", confidence=40, overlap=30).save("prediction.jpg")
 
 
 
+
+
 # infer on an image hosted elsewhere
 #print(model.predict("http://best5.it/b5/wp-content/uploads/2019/07/ape-2-800x400.jpg", hosted=True, confidence=40, overlap=30).json())
