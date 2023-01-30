@@ -5,9 +5,11 @@ import os
 from snapshot import counter
 
 
-# Set the path to the output folder
-output_folder = 'I:/Il mio Drive/UNImore/IoT/00_Progetto/bridge/output'
 
+# check if the 'output' folder is already created in 'inference iot' folder otherwise you're fucked up
+# change the 'output folder'path related to its path in your PC
+# Set the path to the output folder
+output_folder = 'C:/Users/39379/Desktop/iot_project/inference iot/output'
 # Read the image from the file in the output folder
 image_filename = 'image{}.jpg'.format(counter)
 image_filepath = os.path.join(output_folder, image_filename)
