@@ -6,13 +6,21 @@ from snapshot import counter
 
 
 
-# check if the 'output' folder is already created in 'inference iot' folder otherwise you're fucked up
-# change the 'output folder'path related to its path in your PC
-# Set the path to the output folder
-output_folder = 'C:/Users/39379/Desktop/iot_project/inference iot/output'
-# Read the image from the file in the output folder
+# check if the 'prediction' folder is already created in 'inference iot' folder otherwise you're fucked up
+# change the 'prediction folder'path related to its path in your PC
+# Set the path to the prediction folder
+# image_folder = 'C:/Users/39379/Desktop/iot_project/inference iot/image'
+#prediction_folder = 'C:/Users/39379/Desktop/iot_project/inference iot/prediction'
+
+image_folder = os.path.join(os.getcwd(), 'image')
+prediction_folder = os.path.join(os.getcwd(), 'prediction')
+
+if not os.path.exists(prediction_folder):
+    print('funziona')
+    os.makedirs(prediction_folder)
+# Read the image from the file in the image folder
 image_filename = 'image{}.jpg'.format(counter)
-image_filepath = os.path.join(output_folder, image_filename)
+image_filepath = os.path.join(image_folder, image_filename)
 with open(image_filepath, 'rb') as f:
     image_data = f.read()
 
@@ -27,20 +35,19 @@ with open(image_filepath, 'rb') as f:
 # with open("image.jpg", "wb") as f:
 #     f.write(image_data)
 
-#inizio counter=0
 
-# do in inferenza image0 per ottenere predict0
-# counter = 0  # counter for generating unique filenames
+#inferenza su image0 per ottenere predict0
+#!pip install Roboflow
 def prediction():
     global counter
     print(counter)
-    filename = os.path.join(output_folder, 'image{}.jpg'.format(counter))
+    filename = os.path.join(image_folder, 'image{}.jpg'.format(counter))
     print(filename)
 
 
-    # def model():
-    #     #!pip install Roboflow
-    #     global counter
+    
+    
+
     from roboflow import Roboflow
     rf = Roboflow(api_key="YswyoRwpN8l4oas9n0qJ")
     project = rf.workspace("iotinsectdetectionproject").project("insects-detection-hndll")
@@ -51,7 +58,7 @@ def prediction():
 
     # visualize your prediction
     # generate unique filename using the counter
-    prediction_filename = os.path.join(output_folder, 'prediction{}.jpg'.format(counter))
+    prediction_filename = os.path.join(prediction_folder, 'prediction{}.jpg'.format(counter))
     model.predict(filename, confidence=40, overlap=30).save(prediction_filename)
     counter += 1  # increment the counter
     print(counter)
