@@ -3,6 +3,9 @@ import requests
 import urllib.request
 import os 
 from snapshot import counter
+import json
+import base64
+from roboflow import Roboflow
 
 
 
@@ -43,12 +46,7 @@ def prediction():
     print(counter)
     filename = os.path.join(image_folder, 'image{}.jpg'.format(counter))
     print(filename)
-
-
-    
-    
-
-    from roboflow import Roboflow
+        
     rf = Roboflow(api_key="YswyoRwpN8l4oas9n0qJ")
     project = rf.workspace("iotinsectdetectionproject").project("insects-detection-hndll")
     model = project.version(6).model
@@ -60,6 +58,24 @@ def prediction():
     # generate unique filename using the counter
     prediction_filename = os.path.join(prediction_folder, 'prediction{}.jpg'.format(counter))
     model.predict(filename, confidence=40, overlap=30).save(prediction_filename)
+    # generate prediction's json for db, broh
+    # Convert the predicted image to binary data
+    # Create a path to the 'json' folder if it doesn't already exist
+    json_folder = os.path.join(os.getcwd(), 'json')
+    if not os.path.exists(json_folder):
+        os.makedirs(json_folder)
+
+    with open(prediction_filename, 'rb') as f:
+        binary_data = base64.b64encode(f.read())
+
+    # Save the binary data as a dictionary in a JSON file with a unique name based on the counter value
+    binary_data_filename = os.path.join(json_folder, 'prediction_binary_data{}.json'.format(counter))    
+    binary_data_dict = {"binary_image": binary_data.decode()}
+    
+    
+    with open(binary_data_filename, "w") as f:
+        f.write(json.dumps(binary_data_dict))
+
     counter += 1  # increment the counter
     print(counter)
 
