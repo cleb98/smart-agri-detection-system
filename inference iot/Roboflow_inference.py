@@ -61,20 +61,27 @@ def prediction():
     # generate prediction's json for db, broh
     # Convert the predicted image to binary data
     # Create a path to the 'json' folder if it doesn't already exist
-    json_folder = os.path.join(os.getcwd(), 'json')
-    if not os.path.exists(json_folder):
-        os.makedirs(json_folder)
+    dictionary_folder = os.path.join(os.getcwd(), 'dictionary')
+    if not os.path.exists(dictionary_folder):
+        os.makedirs(dictionary_folder)
 
     with open(prediction_filename, 'rb') as f:
         binary_data = base64.b64encode(f.read())
 
     # Save the binary data as a dictionary in a JSON file with a unique name based on the counter value
-    binary_data_filename = os.path.join(json_folder, 'prediction_binary_data{}.json'.format(counter))    
+    binary_data_filename = os.path.join(dictionary_folder, 'prediction_binary_data{}.json'.format(counter))    
     binary_data_dict = {"binary_image": binary_data.decode()}
+    #add nel dizionario le seguenti voci
+    # "datetime": "2023-02-02T21:41:38.739Z",
+    # "contents": "string",
+    # "species": "string",
+    # "binaryimage": "string",
+    # "micro_id": 0
     
     
-    with open(binary_data_filename, "w") as f:
-        f.write(json.dumps(binary_data_dict))
+    
+    # with open(binary_data_filename, "w") as f:
+    #     f.write(json.dumps(binary_data_dict))
 
     counter += 1  # increment the counter
     print(counter)
