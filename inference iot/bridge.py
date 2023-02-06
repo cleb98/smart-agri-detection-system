@@ -58,8 +58,7 @@ class Bridge():
 						take_photo()
 						print('take image')	
 						prediction()
-						print('prediction done')	
-						print('json done')
+						print('data posted')	
 						self.useData()
 						self.inbuffer = []
 					else:

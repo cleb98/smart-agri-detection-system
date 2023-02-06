@@ -67,7 +67,6 @@ def prediction():
     response = requests.post(url = API_POST_URL, json = data)
     print(response.status_code)
     
-
     counter += 1  # increment the counter
    
     
