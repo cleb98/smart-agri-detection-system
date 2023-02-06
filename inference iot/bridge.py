@@ -5,7 +5,7 @@ import requests
 from snapshot import take_photo
 from Roboflow_inference import prediction
 
-
+micro_id = 1 #dovremo farlo inserire all'utente, quindi dovrò interrogare il db 
 
 class Bridge():
 

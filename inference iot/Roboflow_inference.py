@@ -3,17 +3,12 @@ import requests
 import urllib.request
 import os 
 from snapshot import counter
-import json
-import base64
 from roboflow import Roboflow
+from Data_dictionary import data_dictionary
+from datetime import datetime
+# from bridge import micro_id
 
-
-
-# check if the 'prediction' folder is already created in 'inference iot' folder otherwise you're fucked up
-# change the 'prediction folder'path related to its path in your PC
-# Set the path to the prediction folder
-# image_folder = 'C:/Users/39379/Desktop/iot_project/inference iot/image'
-#prediction_folder = 'C:/Users/39379/Desktop/iot_project/inference iot/prediction'
+API_POST_URL = "http://127.0.0.1:8000/image/add/"
 
 image_folder = os.path.join(os.getcwd(), 'image')
 prediction_folder = os.path.join(os.getcwd(), 'prediction')
@@ -27,25 +22,18 @@ image_filepath = os.path.join(image_folder, image_filename)
 with open(image_filepath, 'rb') as f:
     image_data = f.read()
 
-# # URL dell'immagine da importare
-# image_url = "https://best5.it/b5/wp-content/uploads/2019/07/ape-2-800x400.jpg"
-
-# # Scarica l'immagine
-# with urllib.request.urlopen(image_url) as url:
-#     image_data = url.read()
-
-# # Salva l'immagine in un file
-# with open("image.jpg", "wb") as f:
-#     f.write(image_data)
-
-
-#inferenza su image0 per ottenere predict0
 #!pip install Roboflow
 def prediction():
+
+    global API_POST_URL
+    # global micro_id 
+    micro_id = 1
     global counter
-    print(counter)
+    # print(counter)
+    current_datetime = str(datetime.now())
+    print(current_datetime)
     filename = os.path.join(image_folder, 'image{}.jpg'.format(counter))
-    print(filename)
+    # print(filename)
         
     rf = Roboflow(api_key="YswyoRwpN8l4oas9n0qJ")
     project = rf.workspace("iotinsectdetectionproject").project("insects-detection-hndll")
@@ -58,33 +46,31 @@ def prediction():
     # generate unique filename using the counter
     prediction_filename = os.path.join(prediction_folder, 'prediction{}.jpg'.format(counter))
     model.predict(filename, confidence=40, overlap=30).save(prediction_filename)
-    # generate prediction's json for db, broh
-    # Convert the predicted image to binary data
-    # Create a path to the 'json' folder if it doesn't already exist
-    dictionary_folder = os.path.join(os.getcwd(), 'dictionary')
-    if not os.path.exists(dictionary_folder):
-        os.makedirs(dictionary_folder)
+    
+    response = model.predict(filename, confidence=40, overlap=30).json()
+    # datetime = datetime.now()
+    # print(datetime)
+    predictions = response['predictions']
+    class_value = predictions[0]['class']
+    
+    if class_value == 'bee' or class_value == 'ladybird' or class_value == 'earwing' or class_value == '':
+        contents = 'not dangerous'
+    else: 
+        contents = 'dangerous'
 
     with open(prediction_filename, 'rb') as f:
         binary_data = base64.b64encode(f.read())
-
-    # Save the binary data as a dictionary in a JSON file with a unique name based on the counter value
-    binary_data_filename = os.path.join(dictionary_folder, 'prediction_binary_data{}.json'.format(counter))    
-    binary_data_dict = {"binary_image": binary_data.decode()}
-    #add nel dizionario le seguenti voci
-    # "datetime": "2023-02-02T21:41:38.739Z",
-    # "contents": "string",
-    # "species": "string",
-    # "binaryimage": "string",
-    # "micro_id": 0
     
+    binary_image = binary_data.decode()
+   
+    data = data_dictionary(current_datetime = current_datetime , contents = contents, class_value = class_value, binary_image = binary_image , micro_id = micro_id)
+    response = requests.post(url = API_POST_URL, json = data)
+    print(response.status_code)
     
-    
-    # with open(binary_data_filename, "w") as f:
-    #     f.write(json.dumps(binary_data_dict))
 
     counter += 1  # increment the counter
-    print(counter)
+   
+    
 
 # if __name__ == '__main__':
 #     try:
