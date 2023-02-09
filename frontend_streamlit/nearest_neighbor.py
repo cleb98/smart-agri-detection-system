@@ -5,6 +5,10 @@ from sklearn.neighbors import NearestNeighbors
 points = np.array([[44.6562831761065, 11.0958893898546], [44.4860137620492, 11.1248225713927], [44.5267776062036, 10.8195526677055], [44.5605345550626, 11.0072550344059]])
 
 # Creare un modello NearestNeighbors con la distanza Euclidea come metrica
+# La classe NearestNeighbors è utilizzata per trovare i vicini più vicini a un punto dato nello spazio.
+# Il parametro n_neighbors specifica il numero di vicini più vicini da trovare. 
+# Nel caso di questo codice, n_neighbors è impostato su 2, il che significa che verranno trovati i 2 vicini più vicini.
+# Il parametro metric specifica la metrica da utilizzare per calcolare la distanza tra i punti. Nel caso di questo codice, la metrica "euclidean" viene utilizzata, che rappresenta la distanza euclidea standard.
 neigh = NearestNeighbors(n_neighbors=2, metric='euclidean')
 
 # Fit il modello con la matrice di punti
