@@ -14,7 +14,7 @@ class users_model(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True, nullable=False)
     email = Column(String, unique=True, nullable=False)
-    chat_id = Column(Integer, unique=True, nulleable=True)
+    chat_id = Column(Integer, unique=True, nullable=True)
 
     microcontrollers = relationship("microcontrollers_model", back_populates="user", cascade="all, delete")
 
