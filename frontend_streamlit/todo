@@ -1,0 +1,6 @@
+todo
+
+- home page         --> fatto
+    - tabella contenente tutti i microcontrollori: iser_id, nome utente, id micro, lat, long, status
+    - mappa che mostra tutti i microcontrollori
+    - selezionando i microcontrollori deve essere mostrato: nome utente, id microcontrollore, lat, long, status.
