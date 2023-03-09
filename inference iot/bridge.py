@@ -5,10 +5,12 @@ import requests
 from snapshot import take_photo
 from Roboflow_inference import prediction
 
-micro_id = 1 #dovremo farlo inserire all'utente, quindi dovrò interrogare il db 
-
+#micro_id dovremo farlo inserire all'utente, quindi dovrò interrogare il db 
+#micro_id è un codice associato al prodotto
+# micro id deve esser inizializzato sul codice di arduino
+# micro_id=1
 class Bridge():
-
+	
 	def __init__(self):
 		self.config = configparser.ConfigParser()
 		self.config.read('config.ini')
@@ -54,10 +56,11 @@ class Bridge():
 					lastchar=self.ser.read(1)
 
 					if lastchar==b'\xfe': #EOL
-						print("\nValue received")
+						print("\nValue received")				
 						take_photo()
 						print('take image')	
 						prediction()
+						micro_id+=1
 						print('data posted')	
 						self.useData()
 						self.inbuffer = []

@@ -8,7 +8,7 @@ from Data_dictionary import data_dictionary
 from datetime import datetime
 # from bridge import micro_id
 
-API_POST_URL = "http://127.0.0.1:8000/image/add/"
+API_POST_URL = "http://djdkdw.deta.dev/image/add/"
 
 image_folder = os.path.join(os.getcwd(), 'image')
 prediction_folder = os.path.join(os.getcwd(), 'prediction')
