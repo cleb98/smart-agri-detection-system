@@ -87,6 +87,7 @@ class read_users_schema(BaseModel):
     id: int
     name: str
     email: str
+    chat_id: int
     microcontrollers: list[read_microcontrollers_schema] = []
 
     class Config:
