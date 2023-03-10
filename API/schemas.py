@@ -87,7 +87,7 @@ class read_users_schema(BaseModel):
     id: int
     name: str
     email: str
-    chat_id: int
+    chat_id: Optional[int] = None
     microcontrollers: list[read_microcontrollers_schema] = []
 
     class Config:
@@ -99,6 +99,7 @@ class create_users_schema(BaseModel):
     """
     name: str
     email: str
+    chat_id: Optional[int] = None
 
     class Config:
         orm_mode = True
