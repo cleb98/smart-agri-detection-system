@@ -5,7 +5,6 @@ import requests
 from snapshot import take_photo
 from Roboflow_inference import prediction
 
-#micro_id dovremo farlo inserire all'utente, quindi dovrò interrogare il db 
 #micro_id è un codice associato al prodotto
 # micro id deve esser inizializzato sul codice di arduino
 # micro_id=1
@@ -60,7 +59,6 @@ class Bridge():
 						take_photo()
 						print('take image')	
 						prediction()
-						micro_id+=1
 						print('data posted')	
 						self.useData()
 						self.inbuffer = []

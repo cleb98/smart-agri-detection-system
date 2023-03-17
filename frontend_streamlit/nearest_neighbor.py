@@ -1,44 +1,46 @@
 import numpy as np
 from sklearn.neighbors import NearestNeighbors
+from math import radians, sin, cos, sqrt, atan2
 
-# Creare una matrice numpy che contiene le coordinate dei punti
-points = np.array([[44.6562831761065, 11.0958893898546], [44.4860137620492, 11.1248225713927], [44.5267776062036, 10.8195526677055], [44.5605345550626, 11.0072550344059]])
+def haversine(point1, point2):
+    # Convertire i punti in radianti
+    lat1, lon1 = radians(point1[0]), radians(point1[1])
+    lat2, lon2 = radians(point2[0]), radians(point2[1])
 
-# Creare un modello NearestNeighbors con la distanza Euclidea come metrica
-# La classe NearestNeighbors è utilizzata per trovare i vicini più vicini a un punto dato nello spazio.
-# Il parametro n_neighbors specifica il numero di vicini più vicini da trovare. 
-# Nel caso di questo codice, n_neighbors è impostato su 2, il che significa che verranno trovati i 2 vicini più vicini.
-# Il parametro metric specifica la metrica da utilizzare per calcolare la distanza tra i punti. Nel caso di questo codice, la metrica "euclidean" viene utilizzata, che rappresenta la distanza euclidea standard.
-neigh = NearestNeighbors(n_neighbors=2, metric='euclidean')
+    # Calcolare la distanza tra i punti
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+    c = 2 * atan2(sqrt(a), sqrt(1-a))
+
+    # Ritornare la distanza in metri
+    return c * 6371 * 1000
+
+
+# Creare una matrice numpy che contiene le coordinate dei punti in formato [latitudine, longitudine] (casa modena, Gubbio)
+points = np.array([[44.63233671612906, 10.93369970312806],[43.35566843537755, 12.42751296772821]])
+
+# Creare un modello NearestNeighbors con la funzione haversine come metrica
+neigh = NearestNeighbors(n_neighbors=2, metric=haversine)
 
 # Fit il modello con la matrice di punti
 neigh.fit(points)
 
 # Chiedere all'utente di inserire le coordinate del punto
-new_point = np.array([float(input("Enter x coordinate: ")), float(input("Enter y coordinate: "))]).reshape(1, -1)
+new_point = np.array([float(input("Enter latitude: ")), float(input("Enter longitude: "))]).reshape(1, -1)
 
 # Trova i nearest neighbor per il nuovo punto
 distances, indices = neigh.kneighbors(new_point)
 
-# Prendi la distanza al nearest neighbor
-distance = distances[0][1]
+# Get indices that would sort distances in ascending order
+sorted_indices = np.argsort(distances)
 
-# Verifica se la distanza è inferiore a 800 metri
-if distance < 800:
-    # Stampare la distanza e l'indice del nearest neighbor
-    print("The new point has nearest neighbor at index", indices[0][1], "with distance", distance, "meters")
-else:
-    print("No nearest neighbor was found within 800 meters.")
+# Reorder distances and indices arrays based on sorted indices
+distances = distances[0][sorted_indices[0]]
+indices = indices[0][sorted_indices[0]]
 
-# # Trova i nearest neighbor per ogni punto
-# distances, indices = neigh.kneighbors(points)
-# Loop attraverso ogni punto e i suoi nearest neighbor
-# for i, index in enumerate(indices):
-#     # Prendi la distanza al nearest neighbor
-#     distance = distances[i][1]
-    
-#     # Verifica se la distanza è inferiore a 800 metri
-#     if distance < 800:
-#         # Stampare la distanza e l'indice del nearest neighbor
-#         print("Point", i, "has nearest neighbor at index", index[1], "with distance", distance, "meters")
+# Print distances and indices in order
+print("Distances to nearest neighbors:")
+for d, i in zip(distances, indices):
+    print(f"Distance: {d}, Index: {i}")
 
