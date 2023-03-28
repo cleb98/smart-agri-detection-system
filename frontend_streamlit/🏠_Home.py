@@ -10,10 +10,22 @@ API_URL_GET_USERS = "https://djdkdw.deta.dev/users/"
 API_URL_GET_MICROCONTROLLERS = "https://djdkdw.deta.dev/microcontrollers/"
 API_URL_GET_IMAGES = "https://djdkdw.deta.dev/images/"
 
+# def ritrieve_table(url):
+#     response = requests.get(url=url)
+#     df = pd.DataFrame.from_dict(response.json())
+#     return df
+
 def ritrieve_table(url):
     response = requests.get(url=url)
-    df = pd.DataFrame.from_dict(response.json())
-    return df
+    if response.status_code == 200:
+        data = response.json()
+        if isinstance(data, dict):
+            df = pd.DataFrame.from_dict(data)
+            return df
+        elif isinstance(data, list):
+            df = pd.DataFrame(data)
+            return df
+    return None
 
 
 def main():
@@ -36,7 +48,7 @@ def main():
     home_table = pd.merge(user_table, micro_table, on='id')
 
     # drop columns
-    home_table = home_table.drop(labels=["email", "microcontrollers", "images"], axis=1)
+    home_table = home_table.drop(labels=["email", "microcontrollers", "images", "chat_id"], axis=1)
 
     # rename colums
     home_table = home_table.rename(columns={"id":"user_id"})

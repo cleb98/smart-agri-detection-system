@@ -22,11 +22,6 @@ API_URL_GET_IMAGES_BY_MICROCONTROLLER = "https://djdkdw.deta.dev/images/microcon
 USER_ID = 10
 
 
-# def ritrieve_table(url):
-#     response = requests.get(url=url)
-#     df = pd.DataFrame.from_dict(response.json())
-#     return df
-
 def ritrieve_table(url):
     response = requests.get(url=url)
     if response.status_code == 200:
@@ -40,40 +35,6 @@ def ritrieve_table(url):
     return None
 
 
-# def images_list():
-
-#     micro_table = ritrieve_table(API_URL_GET_MICROCONTROLLERS_BY_USER.format(USER_ID))
-
-#     micro_id_list = list(micro_table['id'].values)
-
-#     images_df_list = []
-
-
-#     for item in micro_id_list:
-#         images_df_list.append(ritrieve_table(API_URL_GET_IMAGES_BY_MICROCONTROLLER.format(item)))
-
-#     images_df_list = list(filter(lambda x: x is not None, images_df_list))
-
-
-#     images_df = pd.concat(images_df_list)
-
-#     images_df.rename(columns={"id":"image_id"}, inplace=True)
-
-
-#     print(images_df)
-
-
-#     images_df.drop(labels=["binaryimage"], axis=1, inplace=True)
-
-#     images_df = images_df.reindex(columns=['micro_id', 'image_id', 'datetime', 'contents', 'species'])
-
-#     images_df['datetime'] = pd.to_datetime(images_df['datetime'])
-
-#     images_df.reset_index(drop=True, inplace=True)
-
-#     print(images_df)
-
-#     return images_df
 
 def images_list():
 
@@ -193,11 +154,20 @@ def main():
         # st_folium.folium_static(map_1, width=725)
         st_folium.folium_static(map_1)
 
+    else:
+        st.error("No microcontroller to show!", icon="🚨")
+
     # ADD MICROCONTROLLER
 
     st.markdown("<h3 style='text-align: center;'> Add Microcontroller </h3>", unsafe_allow_html=True)
 
-    map_2 = folium.Map(location=[micro_table["lat"].mean(), micro_table["long"].mean()], tiles='OpenStreetMap', zoom_start=10)
+    if micro_table is not None:
+
+        map_2 = folium.Map(location=[micro_table["lat"].mean(), micro_table["long"].mean()], tiles='OpenStreetMap', zoom_start=10)
+    
+    else:
+
+        map_2 = folium.Map(location=[42.8333, 12.8333], tiles='OpenStreetMap', zoom_start=6)
 
     popup = folium.LatLngPopup()
 
@@ -287,9 +257,6 @@ def main():
 
     st.markdown("<h3 style='text-align: center;'> Images List </h3>", unsafe_allow_html=True)
 
-    # images_df = images_list()
-
-    # st.dataframe(images_df, use_container_width=True)
 
     images_df_1, images_df_2 = images_list()
 
@@ -343,26 +310,7 @@ def main():
                 .carousel button.next {{
                     right: 10px;
                 }}
-                .carousel-caption {{
-                    position: absolute;
-                    bottom: 20px;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    background: rgba(0, 0, 0, 0.5);
-                    padding: 10px;
-                    color: white;
-                    font-size: 1.5em;
-                }}
-                /* Caption text */
-                .text {{
-                    color: #f2f2f2;
-                    font-size: 15px;
-                    padding: 8px 12px;
-                    position: absolute;
-                    bottom: 8px;
-                    width: 100%;
-                    text-align: center;
-                }}
+                
             </style>
         </head>
         <body>
@@ -373,7 +321,7 @@ def main():
         for i, row in images_df_1.iterrows():
             active_class = "active" if i == 0 else ""
             carousel_html += f'<img class="{active_class}" src="data:image/jpeg;base64,{row["binaryimage"]}">\n'
-        
+   
 
 
         carousel_html += """
