@@ -18,8 +18,8 @@ API_URL_DELETE_MICROCONTROLLER_BY_ID = "https://djdkdw.deta.dev/microcontroller/
 
 API_URL_GET_IMAGES_BY_MICROCONTROLLER = "https://djdkdw.deta.dev/images/microcontroller/{}"
 
+API_URL_GET_USERS = "https://djdkdw.deta.dev/users/"
 
-USER_ID = 10
 
 
 def ritrieve_table(url):
@@ -36,9 +36,9 @@ def ritrieve_table(url):
 
 
 
-def images_list():
+def images_list(user_id):
 
-    micro_table = ritrieve_table(API_URL_GET_MICROCONTROLLERS_BY_USER.format(USER_ID))
+    micro_table = ritrieve_table(API_URL_GET_MICROCONTROLLERS_BY_USER.format(user_id))
 
     try:
         micro_id_list = list(micro_table['id'].values)
@@ -73,11 +73,11 @@ def images_list():
 
 
 
-def main():
+def main(user_id: int):
     
     st.markdown("<h3 style='text-align: center;'> Microcontrollers List </h3>", unsafe_allow_html=True)
 
-    micro_table = ritrieve_table(API_URL_GET_MICROCONTROLLERS_BY_USER.format(USER_ID))
+    micro_table = ritrieve_table(API_URL_GET_MICROCONTROLLERS_BY_USER.format(user_id))
 
     if micro_table is not None:
         
@@ -173,7 +173,6 @@ def main():
 
     map_2.add_child(popup)
 
-
     # call to render Folium map in Streamlit
     st_data = st_folium.st_folium(map_2, width=725)
 
@@ -211,7 +210,7 @@ def main():
             post_microcontroller_data = {
                 "lat": float(text_input_1),
                 "long": float(text_input_2),
-                "user_id": USER_ID
+                "user_id": user_id
             }
             response = requests.post(url=API_URL_ADD_MICROCONTROLLER, json=post_microcontroller_data)
             st.success('Microcontroller added!', icon="✅")
@@ -223,7 +222,7 @@ def main():
 
     with st.form(key="delete form", clear_on_submit=True):
    
-        micro_table = micro_table = ritrieve_table(API_URL_GET_MICROCONTROLLERS_BY_USER.format(USER_ID))
+        micro_table = micro_table = ritrieve_table(API_URL_GET_MICROCONTROLLERS_BY_USER.format(user_id))
 
 
         micro_id = st.text_input(label="Insert Microcontroller Id:")
@@ -258,7 +257,7 @@ def main():
     st.markdown("<h3 style='text-align: center;'> Images List </h3>", unsafe_allow_html=True)
 
 
-    images_df_1, images_df_2 = images_list()
+    images_df_1, images_df_2 = images_list(user_id=user_id)
 
     st.dataframe(images_df_2, use_container_width=True)
 
@@ -367,4 +366,29 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+
+    st.markdown("<h1 style='text-align: center;'>🔒 User Login 🔒</h1>", unsafe_allow_html=True)
+
+    user_name = st.text_input("Insert user name:    ")
+    user_email = st.text_input("Insert user email:    ")
+    st.markdown("---")
+
+    users_table = ritrieve_table(API_URL_GET_USERS)
+    print(users_table)
+    logged = False
+ 
+
+    for index, row in users_table.iterrows():
+        if user_name == row["name"] and user_email == row["email"]:
+            logged = True
+            user_id = row["id"]
+        elif user_name == "" and user_email == "":
+            pass
+        elif user_name == "" or user_email == "":
+            pass
+        elif user_email != row["name"] and user_email != row["email"]:
+            pass
+
+    if logged:
+        main(user_id=user_id)
+    

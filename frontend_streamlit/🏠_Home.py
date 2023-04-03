@@ -1,7 +1,10 @@
 import streamlit as st
+import streamlit_js_eval as st_js
 import requests
 import pandas as pd
-
+import numpy as np
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neighbors import NearestNeighbors
 import folium
 import streamlit_folium as st_folium
 
@@ -9,11 +12,7 @@ import streamlit_folium as st_folium
 API_URL_GET_USERS = "https://djdkdw.deta.dev/users/"
 API_URL_GET_MICROCONTROLLERS = "https://djdkdw.deta.dev/microcontrollers/"
 API_URL_GET_IMAGES = "https://djdkdw.deta.dev/images/"
-
-# def ritrieve_table(url):
-#     response = requests.get(url=url)
-#     df = pd.DataFrame.from_dict(response.json())
-#     return df
+API_URL_ADD_USER = "https://djdkdw.deta.dev/user/add/"
 
 def ritrieve_table(url):
     response = requests.get(url=url)
@@ -26,6 +25,10 @@ def ritrieve_table(url):
             df = pd.DataFrame(data)
             return df
     return None
+
+
+def knn(dataframe, lat, long):
+    pass
 
 
 def main():
@@ -62,7 +65,7 @@ def main():
     # create map
     st.markdown("<h2 style='text-align: center;'> Map </h1>", unsafe_allow_html=True)
 
-    m = folium.Map(location=[home_table["lat"].mean(), home_table["long"].mean()], tiles='OpenStreetMap', zoom_start=10)
+    map_1 = folium.Map(location=[home_table["lat"].mean(), home_table["long"].mean()], tiles='OpenStreetMap', zoom_start=10)
 
     for index, row in home_table.iterrows():
 
@@ -111,7 +114,7 @@ def main():
                 fill=True,
                 fill_opacity=1.0,
                 popup=folium.Popup(html=html_template)
-            ).add_to(m)
+            ).add_to(map_1)
         else:
             folium.CircleMarker(
                 location=[row['lat'], row['long']],
@@ -120,9 +123,79 @@ def main():
                 fill=True,
                 fill_opacity=1.0,
                 popup=folium.Popup(html=html_template)
-            ).add_to(m)
+            ).add_to(map_1)
 
-    st_folium.folium_static(m, width=725)
+    st_folium.folium_static(map_1, width=725)
+
+    st.markdown("---")
+
+    st.markdown("<h2 style='text-align: center;'> Check the state of the crops </h2", unsafe_allow_html=True)
+
+    map_2 = folium.Map(location=[42.8333, 12.8333], tiles='OpenStreetMap', zoom_start=6)
+
+    popup = folium.LatLngPopup()
+
+    map_2.add_child(popup)
+
+    # call to render Folium map in Streamlit
+    st_data = st_folium.st_folium(map_2, width=725)
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        geo_check = st.checkbox('use your current position')
+
+
+
+    if st_data['last_clicked'] is None:
+
+        
+        user_position = st_js.get_geolocation()
+
+        with col2:
+            text_input_1 = st.text_input(label='lat', value=(user_position['coords']['latitude'] if geo_check else ''))
+        with col3:
+            text_input_2 = st.text_input(label='long', value=(user_position['coords']['longitude'] if geo_check else ''))
+
+    else:
+
+        user_position = st_js.get_geolocation()
+
+        with col2:
+            text_input_1 = st.text_input(label='lat', value=(user_position['coords']['latitude'] if geo_check else st_data['last_clicked']['lat']))
+        with col3:
+            text_input_2 = st.text_input(label='long', value=(user_position['coords']['longitude'] if geo_check else st_data['last_clicked']['lng']))
+
+
+    if st.button("Check"):
+
+        try:
+            knn(dataframe=home_table, lat=float(text_input_1), long=float(text_input_2))
+        except:
+            st.error("No Microcontrollers in the area!", icon="🚨")
+
+    st.markdown("---")
+
+    st.markdown("<h2 style='text-align: center;'> Add User </h1>", unsafe_allow_html=True)
+
+    with st.form(key="add user form", clear_on_submit=True):
+
+        user_name = st.text_input(label="Create user name:")
+        user_email = st.text_input(label="Insert user email:")
+
+        submitted = st.form_submit_button("Add user")
+
+        if submitted and user_name not in user_table["name"].values and user_email not in user_table["email"].values:
+            try:
+                post_user_data = {
+                    "name": user_name,
+                    "email": user_email,
+                }
+                response = requests.post(url=API_URL_ADD_USER, json=post_user_data)
+                st.success('User added!', icon="✅")
+            except:
+                st.error("Please enter valid input!", icon="🚨")
+
 
 
 if __name__ == "__main__":
