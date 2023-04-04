@@ -6,9 +6,11 @@ from snapshot import counter
 from roboflow import Roboflow
 from Data_dictionary import data_dictionary
 from datetime import datetime
-# from bridge import micro_id
+#per portare image in jpg format
+import io
+from PIL import Image
 
-API_POST_URL = "http://djdkdw.deta.dev/image/add/"
+API_POST_URL = 'https://djdkdw.deta.dev/image/add/'
 
 image_folder = os.path.join(os.getcwd(), 'image')
 prediction_folder = os.path.join(os.getcwd(), 'prediction')
@@ -27,7 +29,7 @@ def prediction():
 
     global API_POST_URL
     # global micro_id 
-    micro_id = 1
+    micro_id = 12
     global counter
     # print(counter)
     current_datetime = str(datetime.now())
@@ -48,31 +50,63 @@ def prediction():
     model.predict(filename, confidence=40, overlap=30).save(prediction_filename)
     
     response = model.predict(filename, confidence=40, overlap=30).json()
-    # datetime = datetime.now()
-    # print(datetime)
+    # #controllo per vedere se apre la predizione giusta
+    # pil_image = Image.open(prediction_filename)
+    # pil_image.show() # Mostra l'immagine
+
     predictions = response['predictions']
-    class_value = predictions[0]['class']
     
-    if class_value == 'bee' or class_value == 'ladybird' or class_value == 'earwing' or class_value == '':
+    # try:
+    #     class_value = predictions[0]['class']
+    # except IndexError:
+    #     class_value = ''
+    class_values = []
+    for prediction in predictions:
+        class_values.append(prediction['class'])
+
+    class_value = ' '.join(class_values) if class_values else ''
+    # print(class_value)
+
+    if all(word in ['bee', 'ladybird', 'earwing', ''] for word in class_value.split()):
         contents = 'not dangerous'
     else: 
         contents = 'dangerous'
+    # if class_value == 'bee' or class_value == 'ladybird' or class_value == 'earwing' or class_value == '':
+    #     contents = 'not dangerous'
+    # else: 
+    #     contents = 'dangerous'
 
-    with open(prediction_filename, 'rb') as f:
-        binary_data = base64.b64encode(f.read())
     
-    binary_image = binary_data.decode()
+
+    
+    with open(prediction_filename, 'rb') as f:
+        binary_data = f.read()
+        binary_image = base64.b64encode(binary_data).decode() #base64_data
+        # print(binary_image)
+    print(type(binary_image))
+    
+    # inserito controllo per vedere se l'immagine binaria salvata come stringa è effettvamente l'immagine inferenziata o no
+    # si può togliere da qui
+    # Decode the image string to bytes
+    binary_image_bytes = base64.b64decode(binary_image)
+
+    # Load the image from bytes
+    with io.BytesIO(binary_image_bytes) as img_buffer:
+        image = Image.open(img_buffer)
+
+    # Save the image to a file on disk
+    with open("image.jpg", "wb") as f:
+        f.write(binary_image_bytes)
+    #fino a qui
    
     data = data_dictionary(current_datetime = current_datetime , contents = contents, class_value = class_value, binary_image = binary_image , micro_id = micro_id)
-    response = requests.post(url = API_POST_URL, json = data)
-    print(response.status_code)
+    # print(data)
+    response = requests.post(url='https://djdkdw.deta.dev/image/add/', json=data)
+    print(response.status_code) 
     
     counter += 1  # increment the counter
    
     
 
 # if __name__ == '__main__':
-#     try:
-#         prediction()
-#     except Exception as e:
-#         print('You cannot make a prediction!', e)
+#     prediction()
