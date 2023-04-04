@@ -3,10 +3,10 @@ import streamlit_js_eval as st_js
 import requests
 import pandas as pd
 import numpy as np
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neighbors import NearestNeighbors
 import folium
 import streamlit_folium as st_folium
+from math import radians, sin, cos, sqrt, atan2
 
 
 API_URL_GET_USERS = "https://djdkdw.deta.dev/users/"
@@ -26,10 +26,63 @@ def ritrieve_table(url):
             return df
     return None
 
+def haversine(point1, point2):
+    # Convertire i punti in radianti
+    lat1, lon1 = radians(point1[0]), radians(point1[1])
+    lat2, lon2 = radians(point2[0]), radians(point2[1])
 
-def knn(dataframe, lat, long):
-    pass
+    # Calcolare la distanza tra i punti
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+    c = 2 * atan2(sqrt(a), sqrt(1-a))
 
+    # Ritornare la distanza in metri
+    return c * 6371 * 1000
+
+
+def Knn(dataframe, lat, long):
+    
+    dataframe["status"] = dataframe["status"].replace({"safe": False, "infested": True})
+
+    points = []
+    labels = []
+
+    new_point = np.array([lat, long])
+    new_point = new_point.reshape(1,-1)
+
+    for index, row in dataframe.iterrows():
+        points.append([row["lat"], row["long"]])
+        labels.append([row["status"]])
+
+    np_points = np.array(points)
+    np_labels = np.array(labels)
+
+    neigh = NearestNeighbors(n_neighbors=len(points), metric=haversine)
+
+    neigh.fit(np_points, np_labels)
+
+    distances, indices = neigh.kneighbors(new_point, return_distance=True)
+
+    # Get the distances, indices, labels
+    distances = distances[0]
+    indices = indices[0]
+    np_labels = np_labels[indices]
+
+
+    if np.all(distances > 10000):
+        st.error("Distance from the first microcontroller greater than 10 km!", icon='🚨')
+        return
+
+    for d, i, c in zip(distances, indices, np_labels):
+
+        if d < 10000 and c == True:
+            st.error("Microcontrollers in the area detected infestations!", icon='🚨')
+            return
+        elif d < 10000 and c == False:
+            st.success('Microcontrollers in the area do not detect infestations!', icon="✅")
+            return
+        
 
 def main():
 
@@ -170,7 +223,7 @@ def main():
     if st.button("Check"):
 
         try:
-            knn(dataframe=home_table, lat=float(text_input_1), long=float(text_input_2))
+            Knn(dataframe=home_table, lat=float(text_input_1), long=float(text_input_2))
         except:
             st.error("No Microcontrollers in the area!", icon="🚨")
 
