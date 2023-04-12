@@ -129,11 +129,11 @@ def read_images_by_microcontroller(micro_id: int, db: Session = Depends(get_db))
     return items
 
 @app.get("/images/checked/", response_model=List[schemas.read_images_schema])
-def read_images_by_checked(db: Session = Depends(get_db)):
+def read_images_by_checked(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """
     route that retrieves unchecked images
     """
-    items = crud.get_unchecked_images(db=db)
+    items = crud.get_unchecked_images(db=db, skip=skip, limit=limit)
     if not items:
         raise HTTPException(status_code=404, detail='unchecked images not found')
     return items

@@ -2,7 +2,8 @@ import requests
 import pandas as pd
 
 
-API_URL_GET_IMAGES = "https://djdkdw.deta.dev/images/"
+API_URL_GET_IMAGES_UNCHECKED = "https://djdkdw.deta.dev/images/checked/"
+API_URL_PATCH_IMAGE_BY_ID = "https://djdkdw.deta.dev/images/update_checked/{}"
 API_URL_PATCH_MICROCONTROLLER_BY_ID = "https://djdkdw.deta.dev/microcontroller/update_status/{}"
 
 def ritrieve_table(url):
@@ -19,7 +20,9 @@ def ritrieve_table(url):
 
 def main():
     
-    images_table = ritrieve_table(API_URL_GET_IMAGES)
+    images_table = ritrieve_table(API_URL_GET_IMAGES_UNCHECKED)
+
+    images_ids = images_table['id'].tolist()
 
     micro_ids = images_table.loc[images_table["contents"] == "dangerous", "micro_id"].unique().tolist()
 
@@ -27,18 +30,28 @@ def main():
         "status": True 
     }
 
+    patch_image_data = {
+        "checked": True
+    }
+
+    for micro_item in micro_ids:
+        response_0 = requests.patch(url=API_URL_PATCH_MICROCONTROLLER_BY_ID.format(micro_item), json=patch_micro_data)
     
-    for id_item in micro_ids:
-        response = requests.patch(url=API_URL_PATCH_MICROCONTROLLER_BY_ID.format(id_item), json=patch_micro_data)
-    
-    if response.status_code == 200:
+    if response_0.status_code == 200:
         print("status dei microcontrollori cambiati!")
     else:
-        print("errore")
+        print("errore, nessun microcontrollore da cambiare!")
 
+    for image_item in images_ids:
+        response_1 = requests.patch(url=API_URL_PATCH_IMAGE_BY_ID.format(image_item), json=patch_image_data)
 
+    if response_1.status_code == 200:
+        print("campo checked delle immagini cambiato!")
+    else:
+        print("errore, nessuna immagine da cmabiare!")
+        
 
-
+    
 
 if __name__ == "__main__":
     main()

@@ -98,11 +98,11 @@ def get_images_by_microcontroller(db: Session, micro_id: int):
     """
     return db.query(models.images_model).filter(models.images_model.micro_id == micro_id).all()
 
-def get_unchecked_images(db: Session):
+def get_unchecked_images(db: Session, skip: int = 0, limit: int = 100):
     """
     get all images where checked is False
     """
-    return db.query(models.images_model).filter(models.images_model.checked == False).all()
+    return db.query(models.images_model).filter(models.images_model.checked == False).offset(skip).limit(limit).all()
 
 #------------------------------------------------update------------------------------------------------------#
 
