@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 import crud, models, schemas
 from database import SessionLocal, engine
 
+
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title='Insect Detection API', description='A simple API that monitors the status of crops based on the presence of pests', version='0.1')
@@ -127,6 +128,16 @@ def read_images_by_microcontroller(micro_id: int, db: Session = Depends(get_db))
         raise HTTPException(status_code=404, detail='images taken by the microcontroller not found')
     return items
 
+@app.get("/images/checked/", response_model=List[schemas.read_images_schema])
+def read_images_by_checked(db: Session = Depends(get_db)):
+    """
+    route that retrieves unchecked images
+    """
+    items = crud.get_unchecked_images(db=db)
+    if not items:
+        raise HTTPException(status_code=404, detail='unchecked images not found')
+    return items
+
 #---------------------------------------------update----------------------------------------------------------#
 
 @app.patch("/user/update/{user_id}", response_model=schemas.read_users_schema)
@@ -158,6 +169,16 @@ def update_microcontroller(micro_id: int, item: schemas.update_microcontroller_s
         return crud.update_microcontroller_item(db=db, item=item, micro_id=micro_id)
     except:
         raise HTTPException(status_code=404, detail='microcontroller not found')
+    
+@app.patch("/images/update_checked/{image_id}", response_model=schemas.read_images_schema)
+def update_image_checked(image_id: int, item: schemas.update_images_checked_schema, db: Session = Depends(get_db)):
+    """
+    route that update image's checked field
+    """
+    try:
+        return crud.update_images_unchecked_item(db=db, item=item, image_id=image_id)
+    except:
+        raise HTTPException(status_code=404, detail='image not found')
 
 #---------------------------------------------delete----------------------------------------------------------#
 

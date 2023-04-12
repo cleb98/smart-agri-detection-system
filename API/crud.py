@@ -98,6 +98,12 @@ def get_images_by_microcontroller(db: Session, micro_id: int):
     """
     return db.query(models.images_model).filter(models.images_model.micro_id == micro_id).all()
 
+def get_unchecked_images(db: Session):
+    """
+    get all images where checked is False
+    """
+    return db.query(models.images_model).filter(models.images_model.checked == False).all()
+
 #------------------------------------------------update------------------------------------------------------#
 
 def update_user_item(db: Session, item: schemas.update_users_schema, user_id: int):
@@ -139,6 +145,18 @@ def update_microcontroller_item(db: Session, item: schemas.update_microcontrolle
     db.refresh(stored_db_item)
     return stored_db_item
 
+def update_images_unchecked_item(db: Session, item: schemas.update_images_checked_schema, image_id: int):
+    """
+    update images' checked field
+    """
+    stored_db_item = db.get(models.images_model, image_id)
+    db_update_data = item.dict(exclude_unset=True)
+    for key, value in db_update_data.items():
+        setattr(stored_db_item, key, value)
+    db.add(stored_db_item)
+    db.commit()
+    db.refresh(stored_db_item)
+    return stored_db_item
 #------------------------------------------------delete------------------------------------------------------#
 
 def delete_user_item(db: Session, user_id: int):

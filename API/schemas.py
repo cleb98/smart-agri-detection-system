@@ -15,6 +15,7 @@ class read_images_schema(BaseModel):
     contents: str
     species: str
     binaryimage: str
+    checked: bool
     micro_id: int
 
     class Config:
@@ -28,10 +29,17 @@ class create_images_schema(BaseModel):
     contents: str
     species: str
     binaryimage: str
+    checked: bool = False
     micro_id: int
 
     class Config:
         orm_mode = True
+
+class update_images_checked_schema(BaseModel):
+    """
+    schema for updating images checked field
+    """
+    checked: bool
 
 #-----------------------------------microcontrollers schemas-----------------------------------#
 
