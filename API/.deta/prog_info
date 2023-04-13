@@ -1,1 +1,0 @@
-{"id":"6764426c-5501-4265-a3e9-fd55f03879b4","space":43974,"runtime":"python3.9","name":"API","path":"djdkdw","project":"a03o8x7n","account":"144798365827","region":"eu-central-1","deps":["fastapi","pydantic","SQLAlchemy","psycopg2-binary"],"envs":null,"public":true,"log_level":"off","cron":""}
