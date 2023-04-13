@@ -1,3 +1,5 @@
+# script for periodic microcontroller status check based on detected images
+
 import requests
 import pandas as pd
 
@@ -21,6 +23,9 @@ def ritrieve_table(url):
 def main():
     
     images_table = ritrieve_table(API_URL_GET_IMAGES_UNCHECKED)
+
+    if images_table is None:
+        return
 
     images_ids = images_table['id'].tolist()
 
@@ -48,10 +53,8 @@ def main():
     if response_1.status_code == 200:
         print("campo checked delle immagini cambiato!")
     else:
-        print("errore, nessuna immagine da cmabiare!")
+        print("errore, nessuna immagine da camabiare!")
         
-
-    
 
 if __name__ == "__main__":
     main()
