@@ -374,7 +374,6 @@ if __name__ == "__main__":
     st.markdown("---")
 
     users_table = ritrieve_table(API_URL_GET_USERS)
-    print(users_table)
     logged = False
  
 
