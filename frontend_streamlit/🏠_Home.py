@@ -9,10 +9,10 @@ import streamlit_folium as st_folium
 from math import radians, sin, cos, sqrt, atan2
 
 
-API_URL_GET_USERS = "https://djdkdw.deta.dev/users/"
-API_URL_GET_MICROCONTROLLERS = "https://djdkdw.deta.dev/microcontrollers/"
-API_URL_GET_IMAGES = "https://djdkdw.deta.dev/images/"
-API_URL_ADD_USER = "https://djdkdw.deta.dev/user/add/"
+API_URL_GET_USERS = "https://insects_api-1-q3217764.deta.app/users/"
+API_URL_GET_MICROCONTROLLERS = "https://insects_api-1-q3217764.deta.app/microcontrollers/"
+API_URL_GET_IMAGES = "https://insects_api-1-q3217764.deta.app/images/"
+API_URL_ADD_USER = "https://insects_api-1-q3217764.deta.app/user/add/"
 
 def ritrieve_table(url):
     response = requests.get(url=url)

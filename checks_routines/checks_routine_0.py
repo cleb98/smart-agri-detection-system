@@ -4,9 +4,9 @@ import requests
 import pandas as pd
 
 
-API_URL_GET_IMAGES_UNCHECKED = "https://djdkdw.deta.dev/images/checked/"
-API_URL_PATCH_IMAGE_BY_ID = "https://djdkdw.deta.dev/images/update_checked/{}"
-API_URL_PATCH_MICROCONTROLLER_BY_ID = "https://djdkdw.deta.dev/microcontroller/update_status/{}"
+API_URL_GET_IMAGES_UNCHECKED = "https://insects_api-1-q3217764.deta.app/images/checked/"
+API_URL_PATCH_IMAGE_BY_ID = "https://insects_api-1-q3217764.deta.app/images/update_checked/{}"
+API_URL_PATCH_MICROCONTROLLER_BY_ID = "https://insects_api-1-q3217764.deta.app/microcontroller/update_status/{}"
 
 def ritrieve_table(url):
     response = requests.get(url=url)

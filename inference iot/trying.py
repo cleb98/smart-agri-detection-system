@@ -33,5 +33,5 @@ class_value = 'bee'
 micro_id = 6
 data = data_dictionary(current_datetime=current_datetime, contents=contents, class_value=class_value, binary_image=binary_image, micro_id=micro_id)
 
-response = requests.post(url='https://djdkdw.deta.dev/image/add/', json=data)
+response = requests.post(url='https://insects_api-1-q3217764.deta.app/image/add/', json=data)
 print(response.status_code)

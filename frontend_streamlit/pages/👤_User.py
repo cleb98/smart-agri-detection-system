@@ -10,15 +10,15 @@ import base64
 import folium
 
 
-API_URL_GET_MICROCONTROLLERS_BY_USER = "https://djdkdw.deta.dev/microcontrollers/user/{}"
+API_URL_GET_MICROCONTROLLERS_BY_USER = "https://insects_api-1-q3217764.deta.app/microcontrollers/user/{}"
 
-API_URL_ADD_MICROCONTROLLER = "https://djdkdw.deta.dev/microcontroller/add/"
+API_URL_ADD_MICROCONTROLLER = "https://insects_api-1-q3217764.deta.app/microcontroller/add/"
 
-API_URL_DELETE_MICROCONTROLLER_BY_ID = "https://djdkdw.deta.dev/microcontroller/delete/{}"
+API_URL_DELETE_MICROCONTROLLER_BY_ID = "https://insects_api-1-q3217764.deta.app/microcontroller/delete/{}"
 
-API_URL_GET_IMAGES_BY_MICROCONTROLLER = "https://djdkdw.deta.dev/images/microcontroller/{}"
+API_URL_GET_IMAGES_BY_MICROCONTROLLER = "https://insects_api-1-q3217764.deta.app/images/microcontroller/{}"
 
-API_URL_GET_USERS = "https://djdkdw.deta.dev/users/"
+API_URL_GET_USERS = "https://insects_api-1-q3217764.deta.app/users/"
 
 
 

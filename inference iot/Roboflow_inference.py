@@ -10,7 +10,7 @@ from datetime import datetime
 import io
 from PIL import Image
 
-API_POST_URL = 'https://djdkdw.deta.dev/image/add/'
+API_POST_URL = 'https://insects_api-1-q3217764.deta.app/image/add/'
 
 image_folder = os.path.join(os.getcwd(), 'image')
 prediction_folder = os.path.join(os.getcwd(), 'prediction')
@@ -101,7 +101,7 @@ def prediction():
    
     data = data_dictionary(current_datetime = current_datetime , contents = contents, class_value = class_value, binary_image = binary_image , micro_id = micro_id)
     # print(data)
-    response = requests.post(url='https://djdkdw.deta.dev/image/add/', json=data)
+    response = requests.post(url='https://insects_api-1-q3217764.deta.app/image/add/', json=data)
     print(response.status_code) 
     
     counter += 1  # increment the counter
