@@ -2,7 +2,8 @@
 
 import requests
 import pandas as pd
-
+import schedule
+import time
 
 API_URL_GET_IMAGES_UNCHECKED = "https://insects_api-1-q3217764.deta.app/images/checked/"
 API_URL_PATCH_IMAGE_BY_ID = "https://insects_api-1-q3217764.deta.app/images/update_checked/{}"
@@ -20,7 +21,7 @@ def ritrieve_table(url):
             return df
     return None
 
-def main():
+def check():
     
     images_table = ritrieve_table(API_URL_GET_IMAGES_UNCHECKED)
 
@@ -54,7 +55,15 @@ def main():
         print("campo checked delle immagini cambiato!")
     else:
         print("errore, nessuna immagine da camabiare!")
-        
+
+
+def main():
+
+    schedule.every(5).minutes.do(check)
+
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
 
 if __name__ == "__main__":
     main()
