@@ -56,3 +56,12 @@
 |/image/delete/{image_id}/|delete image|
 |/images/delete/{micro_id}/|delete all images by microcontroller|
 |/images/delete/|delete all images|
+
+---
+## API deployment
+---
+
+> The api was distributed via [Deta Cloud](https://www.deta.sh/) and can be viewed at https://insects_api-1-q3217764.deta.app/docs. For documentation refer to https://docs.deta.sh/docs/micros/about and https://fastapi.tiangolo.com/deployment/deta/
+
+At this point, in order to request resources from the database, simply use the URL: https://insects_api-1-q3217764.deta.app/ + one of the various routes
+

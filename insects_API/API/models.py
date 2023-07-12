@@ -46,6 +46,7 @@ class images_model(Base):
     contents = Column(String, nullable=False)
     species = Column(String, nullable=False)
     binaryimage = Column(String, nullable=False)
+    checked = Column(Boolean, nullable=False)
 
     micro_id = Column(Integer, ForeignKey('microcontrollers.id'))
 
