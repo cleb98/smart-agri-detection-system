@@ -7,7 +7,6 @@ import json
 import base64
 from roboflow import Roboflow
 
-<<<<<<< HEAD
 
 
 # check if the 'prediction' folder is already created in 'inference iot' folder otherwise you're fucked up
@@ -15,9 +14,6 @@ from roboflow import Roboflow
 # Set the path to the prediction folder
 # image_folder = 'C:/Users/39379/Desktop/iot_project/inference iot/image'
 #prediction_folder = 'C:/Users/39379/Desktop/iot_project/inference iot/prediction'
-=======
-API_POST_URL = 'https://insects_api-1-q3217764.deta.app/image/add/'
->>>>>>> origin
 
 image_folder = os.path.join(os.getcwd(), 'image')
 prediction_folder = os.path.join(os.getcwd(), 'prediction')
@@ -72,11 +68,6 @@ def prediction():
     with open(prediction_filename, 'rb') as f:
         binary_data = base64.b64encode(f.read())
 
-<<<<<<< HEAD
-    # Save the binary data as a dictionary in a JSON file with a unique name based on the counter value
-    binary_data_filename = os.path.join(json_folder, 'prediction_binary_data{}.json'.format(counter))    
-    binary_data_dict = {"binary_image": binary_data.decode()}
-=======
     # Load the image from bytes
     with io.BytesIO(binary_image_bytes) as img_buffer:
         image = Image.open(img_buffer)
@@ -90,7 +81,6 @@ def prediction():
     # print(data)
     response = requests.post(url='https://insects_api-1-q3217764.deta.app/image/add/', json=data)
     print(response.status_code) 
->>>>>>> origin
     
     
     with open(binary_data_filename, "w") as f:
