@@ -15,37 +15,36 @@ def haversine(point1, point2):
 
     # Ritornare la distanza in metri
     return c * 6371 * 1000
+# def knn(points, binary_classes, new_point):
+    # Define binary classes for each point
+binary_classes = np.array([0, 1, 1, 0])
+# binary_classes = binary_classes
 
 
-# Define binary classes for each point
-binary_classes = np.array([0, 1])
+# Create a numpy array that contains the coordinates of the points in the format [latitude, longitude]
+points = np.array([[44.63233671612906, 10.93369970312806], [43.35566843537755, 12.42751296772821], [43.35566843537755, 13.42751296772821], [44.35566843537755, 11.42751296772821]])
+# points = points
+# Create a NearestNeighbors model with the haversine distance metric
+neigh = NearestNeighbors(n_neighbors = len(points), metric=haversine)
 
-# Creare una matrice numpy che contiene le coordinate dei punti in formato [latitudine, longitudine] (casa modena, Gubbio)
-points = np.array([[44.63233671612906, 10.93369970312806],[43.35566843537755, 12.42751296772821]])
-
-# Creare un modello NearestNeighbors con la funzione haversine come metrica
-neigh = NearestNeighbors(n_neighbors=2, metric=haversine)
-
-# Fit il modello con la matrice di punti e le rispettive classi binarie
+# Fit the model with the points and their corresponding binary classes
 neigh.fit(points, binary_classes)
 
-# Chiedere all'utente di inserire le coordinate del punto
-new_point = np.array([float(input("Enter latitude: ")), float(input("Enter longitude: "))]).reshape(1, -1)
+# Ask the user to input the coordinates of the new point
+new_point = np.array([float(input("Enter latitude: ")), float(input("Enter longitude: "))])
+# print(new_point, new_point.shape)
+new_point = new_point.reshape(1, -1)
+# print(new_point, new_point.shape)
+# Find the nearest neighbors for the new point
+distances, indices = neigh.kneighbors(new_point, return_distance=True)
 
-# Trova i nearest neighbor per il nuovo punto
-distances, indices = neigh.kneighbors(new_point)
 
-# Get indices that would sort distances in ascending order
-sorted_indices = np.argsort(distances)
+# Get the distances, indices, and binary classes of the nearest neighbors
+distances = distances[0]
+indices = indices[0]
+binary_classes = binary_classes[indices]
 
-# Reorder distances and indices arrays based on sorted indices
-distances = distances[0][sorted_indices[0]]
-indices = indices[0][sorted_indices[0]]
-
-# Get binary classes for nearest neighbors
-binary_classes = neigh.classes_[indices]
-
-# Print distances, indices, and binary classes in order
+# Print the distances, indices, and binary classes of the nearest neighbors
 print("Distances to nearest neighbors:")
 for d, i, c in zip(distances, indices, binary_classes):
-    print(f"Distance: {d}, Index: {i}, Class: {c}")
+    print(f"Distance: {d}, Class: {c}")

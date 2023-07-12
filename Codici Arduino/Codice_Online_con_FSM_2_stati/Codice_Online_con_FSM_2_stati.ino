@@ -36,8 +36,9 @@ void stato0(){    //legge il sensore
 }
 
 void stato1(){    //invia in seriale
-  //digitalWrite(ledPin, HIGH);
   digitalWrite(LED_BUILTIN, HIGH);
+  int val = digitalRead(pirPin);
+  if(val == HIGH) {
   Serial.write(0xFF);
   Serial.write(0xFA);
   Serial.write(0xFE);
@@ -47,6 +48,7 @@ void stato1(){    //invia in seriale
     controllo = millis() - start_time;
     if(controllo % 500 == 0)Serial.println(controllo);
     if(millis() - start_time > 1000) break;
+  }
   }
   //digitalWrite(ledPin, LOW);
   digitalWrite(LED_BUILTIN, LOW);
