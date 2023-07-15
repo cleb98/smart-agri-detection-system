@@ -1,2 +1,0 @@
-bridge funzia se cè cartella image creata altrimenti non la crea, mentre il codice snapshot lo fs in autimatico
-forse devo agg su roboflow script i mkdir di image
