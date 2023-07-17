@@ -118,6 +118,7 @@ class update_users_schema(BaseModel):
     """
     name: Optional[str] = None
     email: Optional[str] = None
+    chat_id: Optional[int] = None
 
     class Config:
         orm_mode = True
