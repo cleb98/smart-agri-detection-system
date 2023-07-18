@@ -148,6 +148,7 @@ def empty_folders():
     
         
 if __name__ == "__main__":
+    take_photo()
     data = prediction()
     response = send_prediction(data)
     print(response)
