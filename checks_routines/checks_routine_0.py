@@ -10,7 +10,7 @@ API_URL_PATCH_IMAGE_BY_ID = "https://insects_api-1-q3217764.deta.app/images/upda
 API_URL_PATCH_MICROCONTROLLER_BY_ID = "https://insects_api-1-q3217764.deta.app/microcontroller/update_status/{}"
 
 def ritrieve_table(url):
-    response = requests.get(url=url)
+    response = requests.get(url=url, verify = False)
     if response.status_code == 200:
         data = response.json()
         if isinstance(data, dict):
@@ -41,25 +41,27 @@ def check():
     }
 
     for micro_item in micro_ids:
-        response_0 = requests.patch(url=API_URL_PATCH_MICROCONTROLLER_BY_ID.format(micro_item), json=patch_micro_data)
-    
+        response_0 = requests.patch(url=API_URL_PATCH_MICROCONTROLLER_BY_ID.format(micro_item), json=patch_micro_data, verify = False)
+    print(response_0.status_code)
     if response_0.status_code == 200:
         print("status dei microcontrollori cambiati!")
     else:
         print("errore, nessun microcontrollore da cambiare!")
 
     for image_item in images_ids:
-        response_1 = requests.patch(url=API_URL_PATCH_IMAGE_BY_ID.format(image_item), json=patch_image_data)
-
+        response_1 = requests.patch(url=API_URL_PATCH_IMAGE_BY_ID.format(image_item), json=patch_image_data, verify = False)
     if response_1.status_code == 200:
         print("campo checked delle immagini cambiato!")
     else:
         print("errore, nessuna immagine da camabiare!")
 
+     # ottengo lista di microcontrollori con status = True
+
 
 def main():
 
-    schedule.every(5).minutes.do(check)
+
+    schedule.every(1).minutes.do(check)
 
     while True:
         schedule.run_pending()
