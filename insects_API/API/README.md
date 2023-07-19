@@ -37,6 +37,7 @@
 |/image/{image_id}/|read image|
 |/images/|read images|
 |/images/microcontroller/{micro_id}/|read images by microcontroller|
+|/images/chacked|read images by checked|
 
 ### **PATCH**
 |route|description|
@@ -44,6 +45,7 @@
 |/user/update/{user_id}/|update user|
 |/microcontroller/update_status/{micro_id}/|update microcontroller status|
 |/microcontroller/update/{micro_id}/|update microcontroller|
+|/images/update_checked|update image cheked|
 
 ### **DELETE**
 |route|description|
