@@ -37,7 +37,7 @@
 |/image/{image_id}/|read image|
 |/images/|read images|
 |/images/microcontroller/{micro_id}/|read images by microcontroller|
-|/images/chacked/|read images by checked|
+|/images/checked/|read images by checked|
 
 ### **PATCH**
 |route|description|
