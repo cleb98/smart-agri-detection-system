@@ -23,6 +23,7 @@ def ritrieve_table(url):
 def main():
     
     micro_table = ritrieve_table(API_URL_GET_MICROCONTROLLERS)
+    print(micro_table)
     
     if micro_table is None:
         return
