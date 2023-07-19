@@ -4,6 +4,9 @@ import requests
 import pandas as pd
 import schedule
 import time
+import urllib3
+
+urllib3.disable_warnings()
 
 API_URL_GET_IMAGES_UNCHECKED = "https://insects_api-1-q3217764.deta.app/images/checked/"
 API_URL_PATCH_IMAGE_BY_ID = "https://insects_api-1-q3217764.deta.app/images/update_checked/{}"
@@ -23,6 +26,8 @@ def ritrieve_table(url):
 
 def check():
     
+    print("I'm working...")
+
     images_table = ritrieve_table(API_URL_GET_IMAGES_UNCHECKED)
 
     if images_table is None:
