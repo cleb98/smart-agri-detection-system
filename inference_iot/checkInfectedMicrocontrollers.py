@@ -6,9 +6,12 @@ import schedule
 import time
 
 API_URL_GET_MICROCONTROLLERS = "https://insects_api-1-q3217764.deta.app/microcontrollers/"
+#imposta micro_ids come variabile globale
+micro_ids = []
 
 def ritrieve_table(url):
-    response = requests.get(url=url)
+    response = requests.get(url=url, verify = False)
+    print(response.status_code)
     if response.status_code == 200:
         data = response.json()
         if isinstance(data, dict):
@@ -20,18 +23,24 @@ def ritrieve_table(url):
     return None
 
 
-def main():
+def getInfectedList():
     
     micro_table = ritrieve_table(API_URL_GET_MICROCONTROLLERS)
     print(micro_table)
     
     if micro_table is None:
-        return
+        return 
     
     micro_ids = micro_table.loc[micro_table["status"] == True, "id"].tolist()
 
-    print(micro_ids)
+    return micro_ids
+
+    # invia richiesta di accensione led a microcontrollori con status = True tramite seriale 
+
+  
 
 
-if __name__ == "__main__":
-    main()
+
+
+# if __name__ == "__main__":
+#     main()

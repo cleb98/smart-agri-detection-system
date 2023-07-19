@@ -2,17 +2,62 @@ import os
 import cv2
 import base64
 import requests
+import urllib3
+import serial
 from datetime import datetime
 
 from roboflow import Roboflow
+
+from checkInfectedMicrocontrollers import getInfectedList
+
 
 rf = Roboflow(api_key="YswyoRwpN8l4oas9n0qJ")
 project = rf.workspace("iotinsectdetectionproject").project("insects-detection-hndll")
 model = project.version(6).model
 
-MICRO_ID = 14
+MICRO_ID = 12
+
+
 
 API_POST_IMAGE_URL = 'https://insects_api-1-q3217764.deta.app/image/add/'
+
+def set_micro_light(mic_state, ser):
+
+    if mic_state:# invia pacchetto all'arduino per accendere il led (ac finale)
+        try:
+            ser.write(bytes([0xAA, 0xAB, 0xAC]))  # Invia il pacchetto per accendere il led
+            print("led acceso")
+            
+            # ser.close()
+        except serial.SerialException:
+            print("Errore durante la comunicazione seriale con Arduino")
+    else: 
+        try:
+            ser.write(bytes([0xAA, 0xAB, 0xAD]))  # Invia il pacchetto per spegnere il led
+            print("led spento")
+            # ser.close()
+        except serial.SerialException:
+            print("Errore durante la comunicazione seriale con Arduino")
+
+
+def checkInfectedMicrocontrollers():
+
+    micro_ids = getInfectedList()
+    # micro_ids = [17, 12, 7, 9]
+    print(micro_ids)
+    # lancia eccezione se la lista è vuota che non stoppa il programma
+    
+    if micro_ids is None:
+        print("lista microcontrollori vuota")
+    else:
+        for micro_id in micro_ids:
+            if micro_id == MICRO_ID:
+                print("micro_id: ", micro_id)
+                #invia pacchetto all'arduino per accendere il led
+                return True
+            
+            
+    return False
 
 
 def take_photo():
@@ -73,7 +118,9 @@ def send_prediction(data):
     """
     sends the prediction to the server
     """
-    response = requests.post(API_POST_IMAGE_URL, json=data)
+    response = requests.post(API_POST_IMAGE_URL, json=data, verify=False)
+    
+
 
     return response.status_code
 
