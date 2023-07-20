@@ -20,10 +20,11 @@ ammasso_coordinate = [(44.192984, 10.703535), (44.230757, 10.682370), (44.286048
 
 aiuto = "QUESTA E' LA LISTA DEI COMANDI DEL BOT\n\n"\
         "/info: scarica le informazioni relative ad un microcontrollore di cui si è in possesso\n\n" \
-        "/pic {id_utente}: scarica foto dato un ID_utente\n\n" \
+        "/pic {id_micro}: scarica foto dato un ID_utente\n\n" \
         "/create {nome utente} {email utente}: inserisce nel database un nuovo utente con chat_id\n\n" \
         "/statup {id micro} {stato}: aggiorna stato di un microcontrollore\n\n" \
         "/chatid {name} {email}: inserisci il chatID date le proprie credenziali\n\n" \
+        "{coordinate}: permette di sapere se ci sono infestazioni nell'arco di 10 km"\
 
 
 
@@ -168,7 +169,7 @@ def add_id(update, context):
         context.bot.send_message(chat_id=chatid, text="nessun utente associato alle credenziali")
 
 
-def add_micro(update, context):
+def add_micro(update, context):     # CANNOT USE IT UNTIL FIND A WAY TO ADD CORDINATES TO THE MESSAGE
     chatid = update.effective_chat.id
     existing_user = False
     response = requests.get(f"https://insects_api-1-q3217764.deta.app/users/")
@@ -195,16 +196,38 @@ def add_micro(update, context):
 
 
 def status_update(update, context):
+    hacker = True
+    chatid = update.effective_chat.id
     receivedmessage = str(update.message.text).split()
     id_micro = int(receivedmessage[1])
+    response = requests.get(f"https://insects_api-1-q3217764.deta.app/users/")
+    updater.bot.send_message(chat_id=chatid, text=response.status_code)
+    utente = None
+    if response.status_code == 200:
+        data = response.json()
+        for dic in data:
+            if str(chatid) == str(dic["chat_id"]):
+                utente = str(dic["id"])
+                break
+        response = requests.get(f"https://insects_api-1-q3217764.deta.app/microcontrollers/user/{utente}")
+        updater.bot.send_message(chat_id=chatid, text=response.status_code)
+        if response.status_code == 200:
+            data = response.json()
+            for dic in data:
+                if str(dic["id"]) == receivedmessage[1]:
+                    hacker = False
 
-    pillolone = {
-        "status": str(receivedmessage[2])
-    }
-    # pillolone_di_jasone = json.dumps(pillolone)
-    response = requests.patch(f"https://insects_api-1-q3217764.deta.app/microcontroller/update_status/{id_micro}",
-                              json=pillolone)
-    update.message.reply_text(response.status_code)
+    if hacker:
+        updater.bot.send_message(chat_id=chatid, text="Questo non è il tuo microcontrollore "
+                                                      "o il microcontrollore richiesto non esiste")
+    else:
+        pillolone = {
+            "status": str(receivedmessage[2])
+        }
+        response = requests.patch(f"https://insects_api-1-q3217764.deta.app/microcontroller/update_status/{id_micro}",
+                                  json=pillolone)
+        update.message.reply_text(response.status_code)
+        update.message.reply_text("stato microcontrollore aggiornato")
 
 
 def ciataidi(update, context):
@@ -223,7 +246,13 @@ def crea(update, context):
     # pillolone_di_jasone = json.dumps(pillolone)
     print(pillolone)
     response = requests.post(f"https://insects_api-1-q3217764.deta.app/user/add/", json=pillolone)
-    update.message.reply_text(response.status_code)
+    if response.status_code == 200:
+        update.message.reply_text(response.status_code)
+        update.message.reply_text("Utente creato correttamente")
+    elif response.status_code == 500:
+        update.message.reply_text(response.status_code)
+        update.message.reply_text("Username occupato")
+
 
 
 def info(update, context):
@@ -263,6 +292,7 @@ def pics(update, context):
         for dic in data:
             if str(chatid) == str(dic["chat_id"]):
                 utente = str(dic["id"])
+                break
         response = requests.get(f"https://insects_api-1-q3217764.deta.app/microcontrollers/user/{utente}")
         updater.bot.send_message(chat_id=chatid, text=response.status_code)
         if response.status_code == 200:
