@@ -2,6 +2,10 @@ import serial
 import serial.tools.list_ports
 import configparser
 
+import urllib3
+
+urllib3.disable_warnings()
+
 from utils import take_photo, prediction, send_prediction, empty_folders, checkInfectedMicrocontrollers, set_micro_light
 
 
