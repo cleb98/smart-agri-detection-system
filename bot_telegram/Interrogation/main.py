@@ -7,7 +7,6 @@ from sklearn.neighbors import NearestNeighbors
 from math import radians, sin, cos, sqrt, atan2
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from config import BOTKEY
-import random
 
 API_URL_GET_USERS = "https://insects_api-1-q3217764.deta.app/users/"
 API_URL_GET_MICROCONTROLLERS = "https://insects_api-1-q3217764.deta.app/microcontrollers/"
@@ -18,12 +17,14 @@ API_URL_ADD_USER = "https://insects_api-1-q3217764.deta.app/user/add/"
 ammasso_coordinate = [(44.192984, 10.703535), (44.230757, 10.682370), (44.286048, 10.813874), (44.647134, 10.905563),
                       (44.629139, 10.908367), (44.631198, 10.929938)]
 
-aiuto = "QUESTA E' LA LISTA DEI COMANDI DEL BOT\n\n"\
+aiuto = "LISTA DEI COMANDI DEL BOT\n\n"\
         "/info: scarica le informazioni relative ad un microcontrollore di cui si è in possesso\n\n" \
         "/pic {id_micro}: scarica foto dato un ID_utente\n\n" \
         "/create {nome utente} {email utente}: inserisce nel database un nuovo utente con chat_id\n\n" \
         "/statup {id micro} {stato}: aggiorna stato di un microcontrollore\n\n" \
         "/chatid {name} {email}: inserisci il chatID date le proprie credenziali\n\n" \
+        "/addmicro {latitudine} {longitudine}: inserimento di un microcontrollore nel database. RICORDARSI " \
+        "DI SOSTITUIRE LA VIRGOLA CON IL PUNTO NELLE COORDINATE \n\n" \
         "{coordinate}: permette di sapere se ci sono infestazioni nell'arco di 10 km"\
 
 
@@ -169,30 +170,35 @@ def add_id(update, context):
         context.bot.send_message(chat_id=chatid, text="nessun utente associato alle credenziali")
 
 
-def add_micro(update, context):     # CANNOT USE IT UNTIL FIND A WAY TO ADD CORDINATES TO THE MESSAGE
+def add_micro(update, context):
+    receivedmessage = str(update.message.text).split()
     chatid = update.effective_chat.id
-    existing_user = False
     response = requests.get(f"https://insects_api-1-q3217764.deta.app/users/")
     updater.bot.send_message(chat_id=chatid, text=response.status_code)
-    utente = None
+    id_user = None
     if response.status_code == 200:
         data = response.json()
         for dic in data:
             if str(chatid) == str(dic["chat_id"]):
-                utente = int(dic["id"])
-                existing_user = True
-    if not existing_user:
-        updater.bot.send_message(chat_id=chatid, text="No account associated with this chat_id")
+                id_user = str(dic["id"])
+                break
     else:
-        numero = random.randint(0, 5)
-        pillolone = {
-            "lat": ammasso_coordinate[numero][0],
-            "long": ammasso_coordinate[numero][1],
-            "status": "false",
-            "chat_id": utente
-        }
-        response = requests.post(f"https://insects_api-1-q3217764.deta.app/microcontroller/add/", pillolone)
         updater.bot.send_message(chat_id=chatid, text=response.status_code)
+        updater.bot.send_message(chat_id=chatid, text="no account assiciated to this chatID")
+
+    pillolone = {
+        "lat": receivedmessage[1],
+        "long": receivedmessage[2],
+        "status": True,
+        "user_id": int(id_user)
+    }
+    response = requests.post(f"https://insects_api-1-q3217764.deta.app/microcontroller/add/", json=pillolone)
+    if response.status_code == 200:
+        updater.bot.send_message(chat_id=chatid, text=response.status_code)
+        updater.bot.send_message(chat_id=chatid, text="Inserimento microcontrollore effettuato correttamente")
+    else:
+        updater.bot.send_message(chat_id=chatid, text=response.status_code)
+        updater.bot.send_message(chat_id=chatid, text="qualcosa è andato storto")
 
 
 def status_update(update, context):
@@ -323,7 +329,6 @@ def main():
     global updater
     updater = Updater(token=BOTKEY, use_context=True)
     dp = updater.dispatcher
-
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help_command))
     dp.add_handler(CommandHandler("info", info))
@@ -334,8 +339,6 @@ def main():
     dp.add_handler(CommandHandler("statup", status_update))
     dp.add_handler(MessageHandler(Filters.text & ~Filters.command, ciataidi))
     dp.add_handler(MessageHandler(Filters.location, location))
-
-
     updater.start_polling()
     updater.idle()
 
