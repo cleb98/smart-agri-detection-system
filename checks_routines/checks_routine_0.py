@@ -37,6 +37,12 @@ def check():
 
     micro_ids = images_table.loc[images_table["contents"] == "dangerous", "micro_id"].unique().tolist()
 
+    print("micro_ids: ", micro_ids)
+
+    if not micro_ids:
+        print("No dangerous images found!")
+        return
+
     patch_micro_data = {
         "status": True 
     }
