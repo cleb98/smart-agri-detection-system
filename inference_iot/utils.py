@@ -15,7 +15,7 @@ rf = Roboflow(api_key="YswyoRwpN8l4oas9n0qJ")
 project = rf.workspace("iotinsectdetectionproject").project("insects-detection-hndll")
 model = project.version(6).model
 
-MICRO_ID = 12
+MICRO_ID = 16
 
 
 
