@@ -1,7 +1,6 @@
 from telegram import Bot
 from config import BOTKEY, CHAT_ID
 import requests
-import time
 
 testo1 = "Il micro con identificativo "
 testo2 = " ha rilevato una minaccia per la coltivazione"
@@ -22,7 +21,7 @@ def inizializzazione_dict_utenti():
             dati1 = risposta.json()
             lista_micro = []
             for microcontrollore in dati1:
-                if(bool(microcontrollore["status"]) == False):          #c'è da capire se i micro sono attivi quando False o True
+                if bool(microcontrollore["status"]) == True:          #c'è da capire se i micro sono attivi quando False o True
                     lista_micro.append(int(microcontrollore["id"]))
             dict_utenti[utente] = lista_micro
     for key in dict_utenti:
@@ -32,6 +31,7 @@ def inizializzazione_dict_utenti():
 def pollo():
     bot = Bot(token=BOTKEY)
     while True:
+        print("°°°°° FROM THE TOP °°°°°")
         risposta = requests.get(f"https://insects_api-1-q3217764.deta.app/users/")
         if risposta.status_code == 200:
             dati = risposta.json()
@@ -48,30 +48,31 @@ def pollo():
 
 
                 if (id_utente in dict_utenti):
-                    print("utente già presente")
+                    print(f"utente {id_utente} già presente")
                     if risposta.status_code == 200:
                         dati1 = risposta.json()
                         lista_micro = dict_utenti[id_utente]
                         for microcontrollore in dati1:
-                            if (bool(microcontrollore["status"]) == False and int(microcontrollore["id"]) not in dict_utenti[id_utente]):
+                            if (bool(microcontrollore["status"]) == True and int(microcontrollore["id"]) not in dict_utenti[id_utente]):
                                 bot.send_message(chat_id=chat_utente, text=testo1 + str(microcontrollore["id"]) + testo2)
                                 print(str(testo1 + str(microcontrollore["id"]) + testo2))
                                 lista_micro.append(int(microcontrollore["id"]))
 
-                            if (bool(microcontrollore["status"]) == True and int(microcontrollore["id"]) in dict_utenti[id_utente]):
+                            if (bool(microcontrollore["status"]) == False and int(microcontrollore["id"]) in dict_utenti[id_utente]):
                                 lista_micro.remove(int(microcontrollore["id"]))
 
 
 
 
                 else:
+                    print("nuovo utente")
                     dict_utenti[id_utente] = None
                     #risposta = requests.get(f"https://djdkdw.deta.dev/microcontrollers/user/{id_utente}")
                     if risposta.status_code == 200:
                         dati1 = risposta.json()
                         lista_micro = []
                         for microcontrollore in dati1:
-                            if (bool(microcontrollore["status"]) == False):                                                     # c'è da capire se i micro sono attivi quando False o True
+                            if (bool(microcontrollore["status"]) == True):                                                     # c'è da capire se i micro sono attivi quando False o True
                                 lista_micro.append(int(microcontrollore["id"]))
                                 bot.send_message(chat_id=chat_utente, text=testo1 + str((microcontrollore["id"])) + testo2)
                         dict_utenti[id_utente] = lista_micro
