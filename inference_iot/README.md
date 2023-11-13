@@ -1,3 +1,6 @@
+# Project presentatio at:
+https://tome.app/cileb/insect-detection-iot-system-for-agriculture-clk8hfau306j3mq3cx666xhx2
+
 # Attuazione su Arduino
 
 L'arduino il cui micro_id risulta presente nella lista dei microcontrollori infestati gli viene inviato un pacchetto per far accendere il led che vi è attaccato, in modo da segnalare la presenza di un microcontrollore infestato.
