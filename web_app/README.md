@@ -44,4 +44,4 @@ insect-detection-iot-system/web_app streamlit run app.py
 
 | `Home` | `Knn` | `User` |
 |:-------:|:-----------------:|:----------------------------------:|
-| ![Home Example Image](/smart-agri-iot-system/web_app/assets/home.jpg) | ![Knn Example Image](/smart-agri-iot-system/web_app/assets/knn.png) | ![User Example Image](/smart-agri-iot-system/web_app/assets/user.png) |
+| ![Home Example Image](./assets/home.jpg) | ![Knn Example Image](./assets/knn.png) | ![User Example Image](./assets/user.png) |
