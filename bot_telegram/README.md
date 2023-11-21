@@ -24,4 +24,4 @@ The bot continuously polls the database for updates. If one of the user-associat
 
 | `/info` | `/pic {id_micro}` | `/addmicro {latitude} {longitude}` |
 |:-------:|:-----------------:|:----------------------------------:|
-| ![Info Example Image](/insect-detection-iot-system/bot_telegram/assets/info.png) | ![Pic Example Image](/insect-detection-iot-system/bot_telegram/assets/pic_micro.jpg) | ![AddMicro Example Image](/insect-detection-iot-system/bot_telegram/assets/add_micro.png) |
+| ![Info Example Image](./assets/info.png) | ![Pic Example Image](./assets/pic_micro.jpg) | ![AddMicro Example Image](./assets/add_micro.png) |
