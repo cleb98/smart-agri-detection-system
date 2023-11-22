@@ -1,6 +1,6 @@
 # Telegram Bot
 
-The Telegram Bot can perform various operations, including user creation, chat ID creation, microcontroller information retrieval, new microcontroller creation, image retrieval from a specific microcontroller, and state updating of a microcontroller.
+The **[Telegram Bot](https://core.telegram.org/bots)** can perform various operations, including user creation, chat ID creation, microcontroller information retrieval, new microcontroller creation, image retrieval from a specific microcontroller, and state updating of a microcontroller.
 
 ## Bot Commands
 

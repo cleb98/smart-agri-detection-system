@@ -4,13 +4,12 @@
 
 ### Tools Used
 
-- **[Supabase](https://supabase.com/)** is an open source PostgreSQL-based platform for building web and mobile applications and developing back-end applications using SQL and JavaScript.
-- It offers features such as authentication, authorization, data management and real-time notifications.
-- It can run on cloud infrastructure such as AWS, GCP and DigitalOcean or locally.
+As a database provider, we chose **[Supabase](https://supabase.com/)** , an open source platform based on **PostgreSQL** that enables easy development of web, mobile, and backend applications using SQL and JavaScript.
+
 
 ### Schema
 
-![Database Schema](/insect-detection-iot-system/insects_API/API/assets/database_structure.png)
+![Database Schema](./assets/database_structure.png)
 
 - **Three tables:** 
     - **"users"** contains information about users, such as their name, email address, and chat id used by the telegram bot.
@@ -18,13 +17,15 @@
     - **"images"** contains information about the images captured by the microcontrollers, such as the date and time of capture, the species detected, and the image itself in binary format.
 - Foreign keys establish a link between information about users, their microcontrollers, and images acquired by microcontrollers.
 
+---
+
 ## API
 
 ### Tools Used
 
-- **[FastAPI](https://fastapi.tiangolo.com/)** is a modern, high-performance web framework for creating APIs in Python.
-- It is compatible with open standards for APIs, such as OpenAPI and JSON Schema, making it an excellent choice for creating RESTful APIs and other web services.
-- The API has been deployed through **[Deta Space](https://deta.space/)**, a customizable cloud computing platform that offers complete control over users' data and applications.
+The APIs were developed in Python using **[FastAPI](https://fastapi.tiangolo.com/)**, a modern, high-performance framework suitable for creating web services and RESTful APIs. FastAPI is compatible with the **OpenAPI** and **JSON Schema** standards, making it an ideal solution for building web interfaces suited to industry standards.
+
+The APIs have been deployed on **[Deta Space](https://deta.space/)**, a flexible cloud platform that offers full control over users' data and applications. 
 
 ### HTTP methods
 
