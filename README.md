@@ -27,7 +27,7 @@ This project provides an automated system for insect detection in agricultural e
 
 ## Scenario
 
-![Scenario](/smart-agri-iot-system/assets/scenario.png)
+![Scenario](./assets/scenario.png)
 
 > **_Link:_** https://www.science.org/doi/epdf/10.1126/science.aat3466
 
@@ -43,7 +43,7 @@ This project provides an automated system for insect detection in agricultural e
 
 ## Prototype
 
-![Prototype](/smart-agri-iot-system/assets/prototype.png)
+![Prototype](./assets/prototype.png)
 
 ---
 
@@ -51,7 +51,7 @@ This project provides an automated system for insect detection in agricultural e
 
 The system is composed of several modules that interact with each other to achieve the goal. The following diagram shows the architecture of the system.
 
-![Architecture](/smart-agri-iot-system/assets/infrastructure.png)
+![Architecture](./assets/infrastructure.png)
 
 
 - ### [Arduino, Sensors, and Actuation](./arduino/README.md)
