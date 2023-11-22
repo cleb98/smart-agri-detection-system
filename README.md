@@ -43,7 +43,7 @@ This project provides an automated system for insect detection in agricultural e
 
 ## Prototype
 
-![Prototype](./assets/prototype.png)
+![Prototype](./assets/Prototype.png)
 
 ---
 
