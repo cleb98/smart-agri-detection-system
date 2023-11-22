@@ -45,8 +45,6 @@ This project provides an automated system for insect detection in agricultural e
 
 ![Prototype](./assets/prototype.png)
 
-ciao
-
 ---
 
 ## Infrastructure
