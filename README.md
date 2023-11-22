@@ -73,12 +73,12 @@ The system is composed of several modules that interact with each other to achie
 
 ## Todo
 
-- [] Improve the scalability of the system. Change the file format used to save images (base64) in the database.
-- [] Use a more efficient alternative web framework to Streamlit
-- [] Train a proprietary object detection model and implement inference on alternative server (not roboflow)
-- [] Integrate inference within the API
-- [] Simulate real system operation with pheromone traps
-- [] Improve the security of the entire infrastructure
+- [ ] Improve the scalability of the system. Change the file format used to save images (base64) in the database.
+- [ ] Use a more efficient alternative web framework to Streamlit
+- [ ] Train a proprietary object detection model and implement inference on alternative server (not roboflow)
+- [ ] Integrate inference within the API
+- [ ] Simulate real system operation with pheromone traps
+- [ ] Improve the security of the entire infrastructure
 
 
 
